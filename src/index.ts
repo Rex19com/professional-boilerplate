@@ -18,6 +18,7 @@ import { requestLoggingMiddleware } from './middleware/requestLogger';
 
 import { userRoutes } from './routes/userRoutes';
 import { healthRoutes } from './routes/healthRoutes';
+import { authRoutes } from './routes/authRoutes';
 
 // ==========================================
 // INITIALIZE EXPRESS
@@ -70,6 +71,7 @@ app.use('/health', unwrap(healthRoutes) as unknown as RequestHandler);
 // API ROUTES
 // ==========================================
 
+app.use('/api/auth', unwrap(authRoutes) as unknown as RequestHandler);
 app.use('/api/users', unwrap(userRoutes) as unknown as RequestHandler);
 
 // ==========================================

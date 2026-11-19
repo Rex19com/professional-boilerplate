@@ -1,6 +1,7 @@
 import { Router, RequestHandler } from 'express';
 import { UserController } from '../controllers/userController';
 import { validate } from '../middleware/validate';
+import { authMiddleware } from '../middleware/auth';
 import {
     createUserSchema,
     updateUserSchema,
@@ -20,10 +21,12 @@ const checkHandlers = (routeLabel: string, ...handlers: unknown[]): RequestHandl
     return handlers as RequestHandler[];
 };
 
+// Protected routes (require valid JWT)
 userRoutes.get(
     '/',
     ...checkHandlers(
         'GET /',
+        authMiddleware,
         validate(paginationQuerySchema, 'query'),
         asyncHandler(UserController.getAll)
     )
@@ -33,11 +36,13 @@ userRoutes.get(
     '/:id',
     ...checkHandlers(
         'GET /:id',
+        authMiddleware,
         validate(idParamSchema, 'params'),
         asyncHandler(UserController.getById)
     )
 );
 
+// Public route (create / register user)
 userRoutes.post(
     '/',
     ...checkHandlers(
@@ -47,10 +52,12 @@ userRoutes.post(
     )
 );
 
+// Protected routes (require valid JWT)
 userRoutes.put(
     '/:id',
     ...checkHandlers(
         'PUT /:id',
+        authMiddleware,
         validate(idParamSchema, 'params'),
         validate(updateUserSchema),
         asyncHandler(UserController.update)
@@ -61,6 +68,7 @@ userRoutes.delete(
     '/:id',
     ...checkHandlers(
         'DELETE /:id',
+        authMiddleware,
         validate(idParamSchema, 'params'),
         asyncHandler(UserController.delete)
     )
