@@ -59,7 +59,8 @@ export class EmailService {
   }
 
   static async sendPasswordResetEmail(email: string, token: string) {
-    const resetLink = `${config.frontendUrl}/reset-password?token=${token}`;
+    // CHANGED: added /auth so the link matches the Angular route /auth/reset-password
+    const resetLink = `${config.frontendUrl}/auth/reset-password?token=${token}`;
 
     const html = `
       <!DOCTYPE html>

@@ -53,7 +53,15 @@ const apiLimiter = rateLimitFn({
 app.set('trust proxy', 1);
 
 app.use(helmetFn() as RequestHandler);
-app.use(corsFn() as RequestHandler);
+
+// CHANGED: only allow the Angular frontend (port 4200) to call this API
+app.use(
+    corsFn({
+        origin: process.env.FRONTEND_URL || 'http://localhost:4200',
+        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+    }) as RequestHandler
+);
 
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true }));
